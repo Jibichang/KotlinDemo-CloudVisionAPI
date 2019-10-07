@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dbHelper = FeedReaderDbHelper(applicationContext)
-        val db = dbHelper.writableDatabase
+//        val dbHelper = FeedReaderDbHelper(applicationContext)
+//        val db = dbHelper.writableDatabase
 
 //        val values = ContentValues().apply {
 //            put(FeedReaderDbHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_NAME, "test")
