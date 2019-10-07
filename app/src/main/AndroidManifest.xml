@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.lox.kotlindemo">
+        package="org.lox.kotlindemo">
 
     <application
             android:allowBackup="true"
@@ -8,26 +8,26 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true">
+
         <activity
                 android:name=".SplashActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
                 android:name=".MainActivity"
                 android:label="@string/title_activity_main"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+                android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
                 android:name=".AddActivity"
                 android:label="@string/title_activity_add"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+                android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
                 android:name=".DetailActivity"
                 android:label="@string/title_activity_detail"
@@ -35,7 +35,7 @@
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="org.lox.kotlindemo.MainActivity"/>
+                    android:value="org.lox.kotlindemo.MainActivity" />
         </activity>
     </application>
 

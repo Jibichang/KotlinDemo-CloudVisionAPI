@@ -8,16 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.lox.kotlindemo.DetailActivity
-import org.lox.kotlindemo.R
 
-class AdapterList constructor (private val items: List<Data?>,
+
+
+class AdapterList constructor (private var items: List<Data?>,
               private val mContext: Context): RecyclerView.Adapter<AdapterList.ViewHolder>(){
     var mOnItemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(mContext).inflate(
-            R.layout.list_item, viewGroup, false
+            org.lox.kotlindemo.R.layout.list_item, viewGroup, false
         ))
     }
 
@@ -34,9 +34,9 @@ class AdapterList constructor (private val items: List<Data?>,
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var nameView: TextView = itemView.findViewById(R.id.text_name)
-        private var typeView: TextView = itemView.findViewById(R.id.text_type)
-        private var sumView: TextView = itemView.findViewById(R.id.text_sum)
+        private var nameView: TextView = itemView.findViewById(org.lox.kotlindemo.R.id.text_name)
+        private var typeView: TextView = itemView.findViewById(org.lox.kotlindemo.R.id.text_type)
+        private var sumView: TextView = itemView.findViewById(org.lox.kotlindemo.R.id.text_sum)
 
         fun bind(data: Data?){
             itemView.apply {
@@ -49,6 +49,11 @@ class AdapterList constructor (private val items: List<Data?>,
         fun dataStr(data: Data?): String?{
             return data?.print()
         }
+    }
+
+    fun addItem(item: Data?, position: Int) {
+        this.items = this.items + (item)
+        notifyItemInserted(position)
     }
 }
 
