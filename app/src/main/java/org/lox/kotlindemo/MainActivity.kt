@@ -1,32 +1,19 @@
 package org.lox.kotlindemo
 
 import android.app.*
-import android.app.Notification.EXTRA_NOTIFICATION_ID
-import android.content.BroadcastReceiver
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Build
+import android.os.AsyncTask
 import android.os.Bundle
-import android.provider.AlarmClock
-import android.provider.DocumentsContract
-import android.provider.MediaStore
-import android.provider.Settings
+import android.os.CountDownTimer
 import android.support.design.widget.Snackbar
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.RemoteInput
-import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils
 import android.util.Log
-import android.view.View
-import android.widget.Adapter
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,7 +25,6 @@ import java.util.*
 import android.app.NotificationManager as NotificationManager1
 
 class MainActivity : AppCompatActivity() {
-    lateinit var textView: TextView
     lateinit var list: List<Data?>
     lateinit var recycleView: RecyclerView
     lateinit var adapter: AdapterList
@@ -47,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private val KEY_MESSAGE_ID = "key_message_id"
     private val KEY_NOTIFY_ID = "key_notify_id"
-    lateinit var newMessageNotification :Notification
+    private lateinit var newMessageNotification :Notification
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +51,15 @@ class MainActivity : AppCompatActivity() {
 //        val newRowId = db?.insert(FeedReaderDbHelper.FeedReaderContract.FeedEntry.TABLE_NAME, null, values)
 
         fab.setOnClickListener { view ->
-            notifyChannel(getGreetingMessage())
+            val timer = object: CountDownTimer(20000, 1000) {
+                override fun onTick(millisUntilFinished: Long) { }
+                override fun onFinish() {
+                    notifyChannel(getGreetingMessage())
+                }
+            }
+            timer.start()
+
+//            startActivity(Intent(this, DetailActivity::class.java))
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
@@ -78,8 +72,6 @@ class MainActivity : AppCompatActivity() {
         msg += data.print()
 
         setupList()
-        textView = findViewById(R.id.text)
-        textView.text = msg
     }
 
     private fun getGreetingMessage():String{
@@ -117,15 +109,12 @@ class MainActivity : AppCompatActivity() {
             .setAllowGeneratedReplies(true)
             .build()
 
-        val targetTime = Calendar.getInstance()
-        targetTime.add(Calendar.MINUTE, +1)
-
         newMessageNotification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.kotlin_logo)
             .setContentTitle(title)
             .addAction(replyAction)
             .setColor(resources.getColor(R.color.colorPrimary))
-            .setWhen(targetTime.timeInMillis)
+            //.setTimeoutAfter(10000) //gone
             .setOngoing(true)
             .build()
 
@@ -139,25 +128,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent() {
-        var intent :Intent = this.intent
-        val remoteInput :Bundle? = RemoteInput.getResultsFromIntent(intent)
+        val remoteInput :Bundle? = RemoteInput.getResultsFromIntent(this.intent)
         if (remoteInput != null) {
-            val inputString :String = remoteInput?.getCharSequence(
-                KEY_TEXT_REPLY
-            ).toString()
+            val inputString :String = remoteInput?.getCharSequence(KEY_TEXT_REPLY).toString()
             Log.d("handleIntent", inputString)
 
             val indexCo :Int = inputString.indexOf(':')
             val indexNum :Int = inputString.indexOf('.', indexCo)
 
-            Log.d("handleIntent", inputString.substring(0, indexCo) +
-                    " - ${inputString.substring(indexNum+1)}" +
-                    " - ${inputString.substring(indexCo+1, indexNum)}")
+            try {
+                val newItem :Data? = Data(inputString.substring(0, indexCo)
+                    , inputString.substring(indexCo+1, indexNum)
+                    , (inputString.substring(indexNum+1)).toInt())
 
-            val newItem :Data? = Data(inputString.substring(0, indexCo)
-                , inputString.substring(indexCo+1, indexNum)
-                , (inputString.substring(indexNum+1)).toInt())
-            adapter.addItem(newItem, adapter.itemCount)
+
+                Log.d("handleIntent", inputString.substring(0, indexCo) +
+                        " - ${inputString.substring(indexNum+1)}" +
+                        " - ${inputString.substring(indexCo+1, indexNum)}")
+                adapter.addItem(newItem, adapter.itemCount)
+            } catch (r :RuntimeException){
+                Log.d("handleIntent", r.message)
+            }
+
             Log.d("handleIntent", "${adapter.itemCount}")
 
             clearExistingNotifications()
@@ -180,6 +172,7 @@ class MainActivity : AppCompatActivity() {
         list = arrayListOf(Data("Tom", "Kid"))
         list = list + Data("Jerry", "Adult", 35)
         list = list + Data("Jane", null, 32)
+        list = list + Data("Someone", "Kid", 14)
 
         setupRecycle()
     }
