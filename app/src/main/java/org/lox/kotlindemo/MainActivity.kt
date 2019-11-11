@@ -59,9 +59,9 @@ class MainActivity : AppCompatActivity() {
             }
             timer.start()
 
-//            startActivity(Intent(this, DetailActivity::class.java))
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            startActivity(Intent(this, DetailActivity::class.java))
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
         }
 
         val data = Data("Tom", "Kid");

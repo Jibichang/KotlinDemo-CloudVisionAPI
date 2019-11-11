@@ -11,8 +11,9 @@ import android.widget.TextView
 
 
 
-class AdapterList constructor (private var items: List<Data?>,
-              private val mContext: Context): RecyclerView.Adapter<AdapterList.ViewHolder>(){
+class AdapterList constructor ( private var items: List<Data?>,
+    private val mContext: Context)
+    :RecyclerView.Adapter<AdapterList.ViewHolder>(){
     var mOnItemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {

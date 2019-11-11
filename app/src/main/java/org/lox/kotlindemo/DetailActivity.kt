@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.api.client.extensions.android.json.AndroidJsonFactory
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -45,7 +46,7 @@ class DetailActivity : AppCompatActivity() {
         val vision : Vision = visionBuilder.build()
 
         AsyncTask.execute(Runnable {
-            val inputStream = resources.openRawResource(R.raw.report)
+            val inputStream = resources.openRawResource(R.raw.photo)
             try {
                 Log.d("setVisionRequest", "try")
                 val photoDate = inputStream.readBytes()
@@ -67,8 +68,8 @@ class DetailActivity : AppCompatActivity() {
                 val batchResponse =
                     vision.images().annotate(batchRequest).execute()
 
-                val result = batchResponse.responses//[0].fullTextAnnotation
-                listWord = arrayListOf()
+                val result = batchResponse.responses[0].fullTextAnnotation
+                /*listWord = arrayListOf()
                 for (res in result) {
                     for (annotation in res.textAnnotations) {
 //                        Log.d("setVisionRequest", "Text: ${annotation.description}")
@@ -85,12 +86,12 @@ class DetailActivity : AppCompatActivity() {
 
                 for (item in listWord){
                     Log.d("setVisionRequest", "${item.item} : ${item.position}")
-                }
+                }*/
 
                 runOnUiThread(Runnable {
                     val textView = this.findViewById<TextView>(R.id.text_detail)
-//                    textView.text = result.text
-//                    Log.d("setVisionRequest", result.text)
+                    textView.text = result.text
+                    Log.d("setVisionRequest", result.text)
                 })
 
             } catch(e : IOException){
